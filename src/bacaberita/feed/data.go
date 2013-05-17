@@ -27,19 +27,19 @@ func (self Date) MustFormat(format string) string {
 }
 
 type Item struct {
-	Title       string `xml:"title"`
-	Link        string `xml:"link"`
-	Guid        string `xml:"guid"`
-	Date        Date   `xml:"pubDate"`
-	Description string `xml:"description"`
+	Title       string `xml:"title" datastore:"title"`
+	Link        string `xml:"link" datastore:"link"`
+	Guid        string `xml:"guid" datastore:"guid"`
+	Date        Date   `xml:"pubDate" datastore:"date"`
+	Description string `xml:"description" datastore:"description,noindex"`
 }
 
 type Feed struct {
-	Title       string `xml:"title"`
-	Link        string `xml:"link"`
-	Description string `xml:"description"`
-	ImageUrl    string `xml:"image>url"`
-	ImageTitle  string `xml:"image>title"`
-	ImageLink   string `xml:"image>link"`
-	Items       []Item `xml:"item"`
+	Title       string `xml:"title" datastore:"title,noindex"`
+	Link        string `xml:"link" datastore:"link"`
+	Description string `xml:"description" datastore:"description,noindex"`
+	ImageUrl    string `xml:"image>url" datastore:"image_url,noindex"`
+	ImageTitle  string `xml:"image>title" datastore:"image_title,noindex"`
+	ImageLink   string `xml:"image>link" datastore:"image_link,noindex"`
+	Items       []Item `xml:"item" datastore:"-"`
 }
