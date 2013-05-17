@@ -1,7 +1,6 @@
 package feed
 
 import (
-	"encoding/xml"
 	"time"
 )
 
@@ -43,9 +42,4 @@ type Feed struct {
 	ImageTitle  string `xml:"image>title"`
 	ImageLink   string `xml:"image>link"`
 	Items       []Item `xml:"item"`
-}
-
-type RSS struct {
-	XMLName xml.Name `xml:"rss"`
-	Feed    Feed     `xml:"channel"`
 }

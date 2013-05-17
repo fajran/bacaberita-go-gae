@@ -5,7 +5,9 @@ import (
 )
 
 func Parse(content []byte) (*Feed, error) {
-	var data RSS
+	var data struct {
+		Feed Feed `xml:"channel"`
+	}
 	err := xml.Unmarshal(content, &data)
 	if err != nil {
 		return nil, err
