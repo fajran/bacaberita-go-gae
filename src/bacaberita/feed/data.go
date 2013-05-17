@@ -27,12 +27,6 @@ func (self Date) MustFormat(format string) string {
 	return s
 }
 
-type FeedImage struct {
-	Url   string `xml:"url"`
-	Title string `xml:"title"`
-	Link  string `xml:"link"`
-}
-
 type Item struct {
 	Title       string `xml:"title"`
 	Link        string `xml:"link"`
@@ -42,15 +36,16 @@ type Item struct {
 }
 
 type Feed struct {
-	Title       string    `xml:"title"`
-	Link        string    `xml:"link"`
-	Description string    `xml:"description"`
-	Image       FeedImage `xml:"image"`
-	Items       []Item    `xml:"item"`
+	Title       string `xml:"title"`
+	Link        string `xml:"link"`
+	Description string `xml:"description"`
+	ImageUrl    string `xml:"image>url"`
+	ImageTitle  string `xml:"image>title"`
+	ImageLink   string `xml:"image>link"`
+	Items       []Item `xml:"item"`
 }
 
 type RSS struct {
 	XMLName xml.Name `xml:"rss"`
 	Feed    Feed     `xml:"channel"`
 }
-

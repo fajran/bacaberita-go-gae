@@ -60,13 +60,13 @@ func testBasicInput(rawInput string, t *testing.T) {
 	if data.Description != "Channel Description" {
 		t.Errorf("Invalid description")
 	}
-	if data.Image.Url != "Image URL" {
+	if data.ImageUrl != "Image URL" {
 		t.Errorf("Invalid image url")
 	}
-	if data.Image.Title != "Image Title" {
+	if data.ImageTitle != "Image Title" {
 		t.Errorf("Invalid image title")
 	}
-	if data.Image.Link != "image link" {
+	if data.ImageLink != "image link" {
 		t.Errorf("Invalid image link")
 	}
 	if len(data.Items) != 2 {
@@ -104,13 +104,13 @@ func TestParseReddit(t *testing.T) {
 	if data.Description != "Computer Programming" {
 		t.Errorf("Invalid description")
 	}
-	if data.Image.Url != "http://static.reddit.com/reddit_programming.png" {
+	if data.ImageUrl != "http://static.reddit.com/reddit_programming.png" {
 		t.Errorf("Invalid image url")
 	}
-	if data.Image.Title != "programming" {
+	if data.ImageTitle != "programming" {
 		t.Errorf("Invalid image title")
 	}
-	if data.Image.Link != "http://www.reddit.com/r/programming/" {
+	if data.ImageLink != "http://www.reddit.com/r/programming/" {
 		t.Errorf("Invalid image link")
 	}
 	if len(data.Items) != 25 {
