@@ -143,6 +143,7 @@ func TestNamespace(t *testing.T) {
 		return
 	}
 
+	verifyElementNode(t, tree, "http://example.com/ns", "parent", 7)
 	verifyElementNode(t, tree.Children[1], "http://example.com/ns", "child-1", 1)
 	verifyElementNode(t, tree.Children[3], "http://extra", "child-2", 1)
 	verifyElementNode(t, tree.Children[5], "http://change-default", "child-3", 5)
