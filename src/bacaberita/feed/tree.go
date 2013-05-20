@@ -5,6 +5,9 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+
+	"code.google.com/p/go-charset/charset"
+	_ "code.google.com/p/go-charset/data"
 )
 
 const (
@@ -119,6 +122,8 @@ func ParseXML(r io.Reader) (*Node, error) {
 	var node *Node = nil
 
 	decoder := xml.NewDecoder(r)
+	decoder.CharsetReader = charset.NewReader
+
 	for {
 		token, err := decoder.Token()
 		if err == io.EOF {

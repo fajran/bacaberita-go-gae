@@ -212,3 +212,14 @@ func TestAttributeNamespace(t *testing.T) {
 	verifyAttribute(t, child, "", "name", "one")
 	verifyAttribute(t, child, "http://extra", "name", "satu")
 }
+
+func TestEncoding(t *testing.T) {
+	str := `<?xml version="1.0" encoding="ISO-8859-1"?><rss version="0.91"></rss>`
+	r := bytes.NewBuffer([]byte(str))
+
+	_, err := ParseXML(r)
+	if err != nil {
+		t.Errorf("Parser should not report error: %v", err)
+		return
+	}
+}
