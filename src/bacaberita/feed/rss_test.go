@@ -177,3 +177,83 @@ func TestRSSZeroNineOne(t *testing.T) {
 		t.Errorf("Invalid item #2 description: %s")
 	}
 }
+
+func TestRSSZeroNineTwo(t *testing.T) {
+	content, err := ioutil.ReadFile("sampleRss092.xml")
+	if err != nil {
+		t.Errorf("Fail to read RSS 0.9.2 Sample file")
+		return
+	}
+
+	r := bytes.NewBuffer(content)
+	rss, err := ParseRSS(r)
+	if err != nil {
+		t.Errorf("Fail to parse RSS: %w", err)
+		return
+	}
+
+	// Channel
+	if rss.Title != "Dave Winer: Grateful Dead" {
+		t.Errorf("Invalid channel title")
+	}
+	if rss.Link != "http://www.scripting.com/blog/categories/gratefulDead.html" {
+		t.Errorf("Invalid channel link")
+	}
+	if rss.Description != "A high-fidelity Grateful Dead song every day. This is where we're experimenting with enclosures on RSS news items that download when you're not using your computer. If it works (it will) it will be the end of the Click-And-Wait multimedia experience on the Internet. " {
+		t.Errorf("Invalid channel description")
+	}
+	if rss.Date != nil {
+		t.Errorf("Invalid channel time: undefined -> %s", rss.Date)
+	}
+
+	// Channel's Image
+	if rss.ImageUrl != "" {
+		t.Errorf("Image URL is not empty")
+	}
+	if rss.ImageTitle != "" {
+		t.Errorf("Image title is not empty")
+	}
+	if rss.ImageLink != "" {
+		t.Errorf("Image link is not empty")
+	}
+
+	// Items
+	if len(rss.Items) != 22 {
+		t.Errorf("Invalid number of items: 4 -> %s", len(rss.Items))
+	}
+
+	// Item #1
+	if rss.Items[0].Title != "" {
+		t.Errorf("Invalid item #1 title")
+	}
+	if rss.Items[0].Link != "" {
+		t.Errorf("Invalid item #1 link")
+	}
+	if rss.Items[0].Guid != "" {
+		t.Errorf("Invalid item #1 GUID")
+	}
+	if rss.Items[0].Date != nil {
+		t.Errorf("Invalid item #1 date: undefined -> %s", rss.Items[0].Date)
+	}
+	if rss.Items[0].Description != `It's been a few days since I added a song to the Grateful Dead channel. Now that there are all these new Radio users, many of whom are tuned into this channel (it's #16 on the hotlist of upstreaming Radio users, there's no way of knowing how many non-upstreaming users are subscribing, have to do something about this..). Anyway, tonight's song is a live version of Weather Report Suite from Dick's Picks Volume 7. It's wistful music. Of course a beautiful song, oft-quoted here on Scripting News. <i>A little change, the wind and rain.</i>
+` {
+		t.Errorf("Invalid item #1 description: %s")
+	}
+
+	// Item #2
+	if rss.Items[1].Title != "" {
+		t.Errorf("Invalid item #2 title")
+	}
+	if rss.Items[1].Link != "" {
+		t.Errorf("Invalid item #2 link")
+	}
+	if rss.Items[1].Guid != "" {
+		t.Errorf("Invalid item #2 GUID")
+	}
+	if rss.Items[1].Date != nil {
+		t.Errorf("Invalid item #2 date: undefined -> %s", rss.Items[1].Date)
+	}
+	if rss.Items[1].Description != `Kevin Drennan started a <a href="http://deadend.editthispage.com/">Grateful Dead Weblog</a>. Hey it's cool, he even has a <a href="http://deadend.editthispage.com/directory/61">directory</a>. <i>A Frontier 7 feature.</i>` {
+		t.Errorf("Invalid item #2 description: %s")
+	}
+}
