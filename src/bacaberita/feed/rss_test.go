@@ -79,6 +79,9 @@ func TestRSSTwoZero(t *testing.T) {
 	if *rss.Items[0].Description != `How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's <a href="http://howe.iki.rssi.ru/GCTC/gctc_e.htm">Star City</a>.` {
 		t.Errorf("Invalid item #1 description: %s")
 	}
+	if rss.Items[0].Media != nil {
+		t.Errorf("Invalid item #1 media")
+	}
 
 	// Item #2
 	tt = time.Date(2003, time.May, 30, 11, 6, 42, 0, time.UTC)
@@ -96,6 +99,9 @@ func TestRSSTwoZero(t *testing.T) {
 	}
 	if *rss.Items[1].Description != `Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a <a href="http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm">partial eclipse of the Sun</a> on Saturday, May 31st.` {
 		t.Errorf("Invalid item #2 description: %s")
+	}
+	if rss.Items[1].Media != nil {
+		t.Errorf("Invalid item #2 media")
 	}
 }
 
@@ -159,6 +165,9 @@ func TestRSSZeroNineOne(t *testing.T) {
 	if *rss.Items[0].Description != `WorldOS is a framework on which to build programs that work like Freenet or Gnutella -allowing distributed applications using peer-to-peer routing.` {
 		t.Errorf("Invalid item #1 description: %s")
 	}
+	if rss.Items[0].Media != nil {
+		t.Errorf("Invalid item #1 media")
+	}
 
 	// Item #2
 	if *rss.Items[1].Title != "Syndication discussions hot up" {
@@ -175,6 +184,9 @@ func TestRSSZeroNineOne(t *testing.T) {
 	}
 	if *rss.Items[1].Description != `After a period of dormancy, the Syndication mailing list has become active again, with contributions from leaders in traditional media and Web syndication.` {
 		t.Errorf("Invalid item #2 description: %s")
+	}
+	if rss.Items[1].Media != nil {
+		t.Errorf("Invalid item #2 media")
 	}
 }
 
@@ -239,6 +251,20 @@ func TestRSSZeroNineTwo(t *testing.T) {
 ` {
 		t.Errorf("Invalid item #1 description: %s")
 	}
+	if rss.Items[0].Media == nil {
+		t.Errorf("Invalid item #1 media")
+	} else {
+		media := rss.Items[0].Media
+		if media.Url != "http://www.scripting.com/mp3s/weatherReportDicksPicsVol7.mp3" {
+			t.Errorf("Invalid item #1 media's URL")
+		}
+		if media.Length != 6182912 {
+			t.Errorf("Invalid item #1 media's length")
+		}
+		if media.Type != "audio/mpeg" {
+			t.Errorf("Invalid item #1 media's type")
+		}
+	}
 
 	// Item #2
 	if rss.Items[1].Title != nil {
@@ -255,5 +281,8 @@ func TestRSSZeroNineTwo(t *testing.T) {
 	}
 	if *rss.Items[1].Description != `Kevin Drennan started a <a href="http://deadend.editthispage.com/">Grateful Dead Weblog</a>. Hey it's cool, he even has a <a href="http://deadend.editthispage.com/directory/61">directory</a>. <i>A Frontier 7 feature.</i>` {
 		t.Errorf("Invalid item #2 description: %s")
+	}
+	if rss.Items[1].Media != nil {
+		t.Errorf("Invalid item #2 media")
 	}
 }

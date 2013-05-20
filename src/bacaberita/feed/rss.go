@@ -3,6 +3,7 @@ package feed
 import (
 	"errors"
 	"io"
+	"strconv"
 )
 
 func parseImage(feed *Feed, image *Node) error {
@@ -22,6 +23,27 @@ func parseImage(feed *Feed, image *Node) error {
 	}
 
 	return nil
+}
+
+func parseMedia(node *Node) (*Media, error) {
+	if node.HasAttribute("url") && node.HasAttribute("length") && node.HasAttribute("type") {
+		url := node.GetAttribute("url")
+		typ := node.GetAttribute("type")
+		slength := node.GetAttribute("length")
+
+		length, err := strconv.ParseInt(slength, 10, 0)
+
+		if err == nil {
+			media := new(Media)
+			media.Url = url
+			media.Length = int(length)
+			media.Type = typ
+			return media, nil
+		}
+
+		return nil, err
+	}
+	return nil, errors.New("Insufficient attributes")
 }
 
 func parseItem(node *Node) (Item, error) {
@@ -51,6 +73,12 @@ func parseItem(node *Node) (Item, error) {
 		} else if child.Tag == "description" {
 			str := child.TextContent()
 			item.Description = &str
+
+		} else if child.Tag == "enclosure" {
+			media, err := parseMedia(child)
+			if err == nil {
+				item.Media = media
+			}
 		}
 	}
 
