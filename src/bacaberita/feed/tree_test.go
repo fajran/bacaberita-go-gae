@@ -64,6 +64,25 @@ func verifySiblings(t *testing.T, nodes ...*Node) {
 	}
 }
 
+func verifyAttribute(t *testing.T, node *Node, ns string, name string, value string) {
+	if node.Type != ELEMENT {
+		t.Errorf("Invalid node type")
+		return
+	}
+
+	for _, attr := range node.Attributes {
+		if ns == attr.NS && name == attr.Name {
+			if value != attr.Value {
+				t.Errorf("Attribute's value mismatch, ns=%s name=%s: %s -> %s",
+					ns, name, value, attr.Value)
+			}
+			return
+		}
+	}
+
+	t.Errorf("Attribute is not found, ns=%s name=%s", ns, name)
+}
+
 func TestBasic(t *testing.T) {
 	str := `
 <?xml version="1.0" encoding="UTF-8"?><parent><child-1>first child</child-1><child-2>second child</child-2></parent>`
@@ -161,4 +180,34 @@ func TestEmptyElement(t *testing.T) {
 	verifyElementNode(t, tree, "", "parent", 2)
 	verifyElementNode(t, tree.Children[0], "", "child-1", 0)
 	verifyElementNode(t, tree.Children[1], "", "child-2", 0)
+}
+
+func TestAttribute(t *testing.T) {
+	str := `<parent version="1.0"></parent>`
+	r := bytes.NewBuffer([]byte(str))
+
+	tree, err := ParseXML(r)
+	if err != nil {
+		t.Errorf("Parser should not report error: %v", err)
+		return
+	}
+
+	verifyAttribute(t, tree, "", "version", "1.0")
+}
+
+func TestAttributeNamespace(t *testing.T) {
+	str := `<parent version="2.0" xmlns:extra="http://extra"><child-1 name="one" extra:name="satu"/></parent>`
+	r := bytes.NewBuffer([]byte(str))
+
+	tree, err := ParseXML(r)
+	if err != nil {
+		t.Errorf("Parser should not report error: %v", err)
+		return
+	}
+
+	verifyAttribute(t, tree, "", "version", "2.0")
+
+	child := tree.Children[0]
+	verifyAttribute(t, child, "", "name", "one")
+	verifyAttribute(t, child, "http://extra", "name", "satu")
 }

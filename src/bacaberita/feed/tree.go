@@ -11,6 +11,12 @@ const (
 	TEXT
 )
 
+type Attribute struct {
+	NS    string
+	Name  string
+	Value string
+}
+
 type Node struct {
 	Type   byte
 	Parent *Node
@@ -21,7 +27,7 @@ type Node struct {
 	NS         string
 	Tag        string
 	Children   []*Node
-	Attributes map[string]string
+	Attributes []Attribute
 
 	// For Text Node
 	Value string
@@ -43,6 +49,7 @@ func newElementNode(ns string, tag string) *Node {
 	node.NS = ns
 	node.Tag = tag
 	node.Children = make([]*Node, 0, 0)
+	node.Attributes = make([]Attribute, 0, 0)
 	node.Parent = nil
 	return node
 }
@@ -71,6 +78,13 @@ func ParseXML(r io.Reader) (*Node, error) {
 		switch t := token.(type) {
 		case xml.StartElement:
 			child := newElementNode(t.Name.Space, t.Name.Local)
+			for _, attr := range t.Attr {
+				attribute := Attribute{
+					NS:    attr.Name.Space,
+					Name:  attr.Name.Local,
+					Value: attr.Value}
+				child.Attributes = append(child.Attributes, attribute)
+			}
 
 			if tree == nil {
 				tree = child
