@@ -8,13 +8,16 @@ import (
 func parseImage(feed *Feed, image *Node) error {
 	for _, child := range image.ChildElements() {
 		if child.Tag == "url" {
-			feed.ImageUrl = child.TextContent()
+			str := child.TextContent()
+			feed.ImageUrl = &str
 
 		} else if child.Tag == "title" {
-			feed.ImageTitle = child.TextContent()
+			str := child.TextContent()
+			feed.ImageTitle = &str
 
 		} else if child.Tag == "link" {
-			feed.ImageLink = child.TextContent()
+			str := child.TextContent()
+			feed.ImageLink = &str
 		}
 	}
 
@@ -27,13 +30,16 @@ func parseItem(node *Node) (Item, error) {
 
 	for _, child := range node.ChildElements() {
 		if child.Tag == "title" {
-			item.Title = child.TextContent()
+			str := child.TextContent()
+			item.Title = &str
 
 		} else if child.Tag == "link" {
-			item.Link = child.TextContent()
+			str := child.TextContent()
+			item.Link = &str
 
 		} else if child.Tag == "guid" {
-			item.Guid = child.TextContent()
+			str := child.TextContent()
+			item.Guid = &str
 
 		} else if child.Tag == "pubDate" {
 			date, err := ParseDate(child.TextContent())
@@ -43,7 +49,8 @@ func parseItem(node *Node) (Item, error) {
 			item.Date = &date
 
 		} else if child.Tag == "description" {
-			item.Description = child.TextContent()
+			str := child.TextContent()
+			item.Description = &str
 		}
 	}
 
@@ -57,13 +64,16 @@ func parseChannel(channel *Node) (*Feed, error) {
 
 	for _, child := range channel.ChildElements() {
 		if child.Tag == "title" {
-			feed.Title = child.TextContent()
+			str := child.TextContent()
+			feed.Title = &str
 
 		} else if child.Tag == "link" {
-			feed.Link = child.TextContent()
+			str := child.TextContent()
+			feed.Link = &str
 
 		} else if child.Tag == "description" {
-			feed.Description = child.TextContent()
+			str := child.TextContent()
+			feed.Description = &str
 
 		} else if child.Tag == "pubDate" {
 			date, err := ParseDate(child.TextContent())

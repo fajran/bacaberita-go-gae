@@ -5,20 +5,20 @@ import (
 )
 
 type Item struct {
-	Title       string
-	Link        string
-	Guid        string
+	Title       *string
+	Link        *string
+	Guid        *string
 	Date        *time.Time
-	Description string
+	Description *string
 }
 
 type Feed struct {
-	Title       string
-	Link        string
-	Description string
+	Title       *string
+	Link        *string
+	Description *string
 	Date        *time.Time
-	ImageUrl    string
-	ImageTitle  string
-	ImageLink   string
+	ImageUrl    *string
+	ImageTitle  *string
+	ImageLink   *string
 	Items       []Item
 }
