@@ -98,3 +98,82 @@ func TestRSSTwoZero(t *testing.T) {
 		t.Errorf("Invalid item #2 description: %s")
 	}
 }
+
+func TestRSSZeroNineOne(t *testing.T) {
+	content, err := ioutil.ReadFile("sampleRss091.xml")
+	if err != nil {
+		t.Errorf("Fail to read RSS 0.9.1 Sample file")
+		return
+	}
+
+	r := bytes.NewBuffer(content)
+	rss, err := ParseRSS(r)
+	if err != nil {
+		t.Errorf("Fail to parse RSS: %w", err)
+		return
+	}
+
+	// Channel
+	if rss.Title != "WriteTheWeb" {
+		t.Errorf("Invalid channel title")
+	}
+	if rss.Link != "http://writetheweb.com" {
+		t.Errorf("Invalid channel link")
+	}
+	if rss.Description != "News for web users that write back" {
+		t.Errorf("Invalid channel description")
+	}
+	if rss.Date != nil {
+		t.Errorf("Invalid channel time: undefined -> %s", rss.Date)
+	}
+
+	// Channel's Image
+	if rss.ImageUrl != "http://writetheweb.com/images/mynetscape88.gif" {
+		t.Errorf("Invalid image url")
+	}
+	if rss.ImageTitle != "WriteTheWeb" {
+		t.Errorf("Image image title")
+	}
+	if rss.ImageLink != "http://writetheweb.com" {
+		t.Errorf("Image image link")
+	}
+
+	// Items
+	if len(rss.Items) != 6 {
+		t.Errorf("Invalid number of items: 6 -> %s", len(rss.Items))
+	}
+
+	// Item #1
+	if rss.Items[0].Title != "Giving the world a pluggable Gnutella" {
+		t.Errorf("Invalid item #1 title")
+	}
+	if rss.Items[0].Link != "http://writetheweb.com/read.php?item=24" {
+		t.Errorf("Invalid item #1 link")
+	}
+	if rss.Items[0].Guid != "" {
+		t.Errorf("Invalid item #1 GUID")
+	}
+	if rss.Items[0].Date != nil {
+		t.Errorf("Invalid item #1 date: undefined -> %s", rss.Items[0].Date)
+	}
+	if rss.Items[0].Description != `WorldOS is a framework on which to build programs that work like Freenet or Gnutella -allowing distributed applications using peer-to-peer routing.` {
+		t.Errorf("Invalid item #1 description: %s")
+	}
+
+	// Item #2
+	if rss.Items[1].Title != "Syndication discussions hot up" {
+		t.Errorf("Invalid item #2 title")
+	}
+	if rss.Items[1].Link != "http://writetheweb.com/read.php?item=23" {
+		t.Errorf("Invalid item #2 link")
+	}
+	if rss.Items[1].Guid != "" {
+		t.Errorf("Invalid item #2 GUID")
+	}
+	if rss.Items[1].Date != nil {
+		t.Errorf("Invalid item #2 date: undefined -> %s", rss.Items[1].Date)
+	}
+	if rss.Items[1].Description != `After a period of dormancy, the Syndication mailing list has become active again, with contributions from leaders in traditional media and Web syndication.` {
+		t.Errorf("Invalid item #2 description: %s")
+	}
+}
