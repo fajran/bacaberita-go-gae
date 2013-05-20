@@ -17,7 +17,7 @@ func equalDate(t1 time.Time, t2 time.Time) bool {
 		t1.Second() == t2.Second()
 }
 
-func TestRSS(t *testing.T) {
+func TestRSSTwoZero(t *testing.T) {
 	content, err := ioutil.ReadFile("rss2sample.xml")
 	if err != nil {
 		t.Errorf("Fail to read RSS 2.0 Sample file")
@@ -92,7 +92,7 @@ func TestRSS(t *testing.T) {
 		t.Errorf("Invalid item #2 GUID")
 	}
 	if !equalDate(*rss.Items[1].Date, tt) {
-		t.Errorf("Invalid item #2 date: %s -> %s", tt, rss.Items[0].Date)
+		t.Errorf("Invalid item #2 date: %s -> %s", tt, rss.Items[1].Date)
 	}
 	if rss.Items[1].Description != `Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a <a href="http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm">partial eclipse of the Sun</a> on Saturday, May 31st.` {
 		t.Errorf("Invalid item #2 description: %s")
