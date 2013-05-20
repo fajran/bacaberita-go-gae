@@ -286,3 +286,87 @@ func TestRSSZeroNineTwo(t *testing.T) {
 		t.Errorf("Invalid item #2 media")
 	}
 }
+
+func TestInvalidDate(t *testing.T) {
+	str := `<rss><channel>
+  <title>Title</title>
+  <description>Description</description>
+  <link>http://link</link>
+  <pubDate>invalid date</pubDate>
+  <item>
+    <title>first</title>
+    <pubDate>Fri, 13 Apr 2001 19:23:02 GMT</pubDate>
+  </item>
+  <item>
+    <title>second</title>
+    <pubDate>invalid</pubDate>
+  </item>
+  </channel></rss>`
+	r := bytes.NewBuffer([]byte(str))
+
+	rss, err := ParseRSS(r)
+	if err != nil {
+		t.Errorf("Fail to parse RSS: %w", err)
+		return
+	}
+
+	// Channel
+	if *rss.Title != "Title" {
+		t.Errorf("Invalid channel title")
+	}
+	if *rss.Link != "http://link" {
+		t.Errorf("Invalid channel link")
+	}
+	if *rss.Description != "Description" {
+		t.Errorf("Invalid channel description")
+	}
+	if rss.Date != nil {
+		t.Errorf("Invalid channel time: undefined -> %s", rss.Date)
+	}
+
+	// Items
+	if len(rss.Items) != 2 {
+		t.Errorf("Invalid number of items: 2 -> %s", len(rss.Items))
+	}
+
+	// Item #1
+	tt := time.Date(2001, time.April, 13, 19, 23, 2, 0, time.UTC)
+	if *rss.Items[0].Title != "first" {
+		t.Errorf("Invalid item #1 title")
+	}
+	if rss.Items[0].Link != nil {
+		t.Errorf("Invalid item #1 link")
+	}
+	if rss.Items[0].Guid != nil {
+		t.Errorf("Invalid item #1 GUID")
+	}
+	if !equalDate(*rss.Items[0].Date, tt) {
+		t.Errorf("Invalid item #1 date: undefined -> %s", rss.Items[0].Date)
+	}
+	if rss.Items[0].Description != nil {
+		t.Errorf("Invalid item #1 description: %s")
+	}
+	if rss.Items[0].Media != nil {
+		t.Errorf("Invalid item #1 media")
+	}
+
+	// Item #2
+	if *rss.Items[1].Title != "second" {
+		t.Errorf("Invalid item #2 title")
+	}
+	if rss.Items[1].Link != nil {
+		t.Errorf("Invalid item #2 link")
+	}
+	if rss.Items[1].Guid != nil {
+		t.Errorf("Invalid item #2 GUID")
+	}
+	if rss.Items[1].Date != nil {
+		t.Errorf("Invalid item #2 date: undefined -> %s", rss.Items[1].Date)
+	}
+	if rss.Items[1].Description != nil {
+		t.Errorf("Invalid item #2 description: %s")
+	}
+	if rss.Items[1].Media != nil {
+		t.Errorf("Invalid item #2 media")
+	}
+}

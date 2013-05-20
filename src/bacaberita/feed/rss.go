@@ -65,10 +65,9 @@ func parseItem(node *Node) (Item, error) {
 
 		} else if child.Tag == "pubDate" {
 			date, err := ParseDate(child.TextContent())
-			if err != nil {
-				return item, err
+			if err == nil {
+				item.Date = &date
 			}
-			item.Date = &date
 
 		} else if child.Tag == "description" {
 			str := child.TextContent()
@@ -105,22 +104,18 @@ func parseChannel(channel *Node) (*Feed, error) {
 
 		} else if child.Tag == "pubDate" {
 			date, err := ParseDate(child.TextContent())
-			if err != nil {
-				return nil, err
+			if err == nil {
+				feed.Date = &date
 			}
-			feed.Date = &date
 
 		} else if child.Tag == "image" {
-			if err := parseImage(feed, child); err != nil {
-				return nil, err
-			}
+			parseImage(feed, child)
 
 		} else if child.Tag == "item" {
 			item, err := parseItem(child)
-			if err != nil {
-				return nil, err
+			if err == nil {
+				feed.Items = append(feed.Items, item)
 			}
-			feed.Items = append(feed.Items, item)
 		}
 	}
 
