@@ -1,6 +1,7 @@
 package feed
 
 import (
+	"bytes"
 	"encoding/xml"
 	"fmt"
 	"io"
@@ -41,6 +42,57 @@ func (this *Node) String() string {
 		text = fmt.Sprintf("[Node Type=Text]")
 	}
 	return text
+}
+
+func (this *Node) HasAttributeNS(ns string, name string) bool {
+	for _, attr := range this.Attributes {
+		if ns == attr.NS && name == attr.Name {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (this *Node) HasAttribute(name string) bool {
+	return this.HasAttributeNS("", name)
+}
+
+func (this *Node) GetAttributeNS(ns string, name string) string {
+	for _, attr := range this.Attributes {
+		if ns == attr.NS && name == attr.Name {
+			return attr.Value
+		}
+	}
+
+	return ""
+}
+
+func (this *Node) GetAttribute(name string) string {
+	return this.GetAttributeNS("", name)
+}
+
+func (this *Node) ChildElements() []*Node {
+	res := make([]*Node, 0, len(this.Children)/2)
+	for _, child := range this.Children {
+		if child.Type == ELEMENT {
+			res = append(res, child)
+		}
+	}
+	return res
+}
+
+func (this *Node) TextContent() string {
+	if this.Type == TEXT {
+		return this.Value
+	}
+
+	var buffer bytes.Buffer
+	for _, child := range this.Children {
+		buffer.WriteString(child.TextContent())
+	}
+
+	return buffer.String()
 }
 
 func newElementNode(ns string, tag string) *Node {
