@@ -1,4 +1,4 @@
-package service
+package utils
 
 import (
 	"io/ioutil"
@@ -7,7 +7,7 @@ import (
 	"appengine/urlfetch"
 )
 
-func Download(url string, c appengine.Context) ([]byte, error) {
+func Download(c appengine.Context, url string) ([]byte, error) {
 	client := urlfetch.Client(c)
 
 	resp, err := client.Get(url)
