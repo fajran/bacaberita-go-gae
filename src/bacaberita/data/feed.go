@@ -2,6 +2,9 @@ package data
 
 import (
 	"time"
+
+	"appengine"
+	"appengine/datastore"
 )
 
 type Feed struct {
@@ -34,4 +37,28 @@ type FeedItem struct {
 	Created time.Time
 	Updated time.Time
 	Content string
+}
+
+func FeedKey(c appengine.Context, url string) *datastore.Key {
+	return datastore.NewKey(c, "Feed", url, 0, nil)
+}
+
+func RegisterFeed(c appengine.Context, url string) (*datastore.Key, *Feed, error) {
+	feed := new(Feed)
+
+	key := FeedKey(c, url)
+	err := datastore.Get(c, key, feed)
+
+	if err == nil {
+		return key, feed, nil
+	} else if err != datastore.ErrNoSuchEntity {
+		return key, feed, err
+	}
+
+	feed.Url = url
+	feed.Created = time.Now()
+
+	key, err = datastore.Put(c, key, feed)
+
+	return key, feed, err
 }
