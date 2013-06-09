@@ -2,6 +2,7 @@ package data
 
 import (
 	"bytes"
+	"fmt"
 	"time"
 
 	"appengine"
@@ -90,7 +91,26 @@ func UpdateFeed(c appengine.Context, feed *Feed) (*datastore.Key, error) {
 	key := feed.NewKey(c)
 	datastore.Put(c, key, feed)
 
-	return key, nil
+	err = StoreFeedItems(c, data, key)
+
+	return key, err
+}
+
+func StoreFeedItems(c appengine.Context, data *parser.Feed, parent *datastore.Key) error {
+	for _, item := range data.Items {
+		feedItem := new(FeedItem)
+		feedItem.UpdateFromParser(item)
+
+		key := feedItem.NewKey(c, parent)
+
+		key, err := datastore.Put(c, key, feedItem)
+		if err != nil {
+			c.Errorf("Error inserting item: url=%s error=%w", feedItem.Link, err)
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (feed *Feed) UpdateFromParser(data *parser.Feed) {
@@ -119,4 +139,34 @@ func (feed *Feed) UpdateFromParser(data *parser.Feed) {
 
 func (feed *Feed) NewKey(c appengine.Context) *datastore.Key {
 	return datastore.NewKey(c, "Feed", feed.Url, 0, nil)
+}
+
+func (item *FeedItem) UpdateFromParser(data *parser.Item) {
+	if data.Title != nil {
+		item.Title = *data.Title
+	}
+	if data.Link != nil {
+		item.Link = *data.Link
+	}
+	if data.Guid != nil {
+		item.Guid = *data.Guid
+	}
+	if data.Date != nil {
+		item.Date = *data.Date
+	}
+	if data.Description != nil {
+		item.Description = *data.Description
+	}
+
+	if data.Media != nil {
+		item.MediaUrl = data.Media.Url
+		item.MediaLength = data.Media.Length
+		item.MediaType = data.Media.Type
+	}
+}
+
+func (item *FeedItem) NewKey(c appengine.Context, parent *datastore.Key) *datastore.Key {
+	id := fmt.Sprintf("%s-%s", utils.Sha1(parent.StringID()), utils.Sha1(item.Link))
+
+	return datastore.NewKey(c, "FeedItem", id, 0, parent)
 }
