@@ -45,14 +45,14 @@ func RegisterFeed(c appengine.Context, url string) (*datastore.Key, *Feed, error
 	return key, feed, err
 }
 
-func GetFeed(c appengine.Context, url string) (*Feed, error) {
+func GetFeed(c appengine.Context, url string) (*datastore.Key, *Feed, error) {
 	feed := new(Feed)
 	feed.Url = url
 
 	key := feed.NewKey(c)
 	err := datastore.Get(c, key, feed)
 
-	return feed, err
+	return key, feed, err
 }
 
 func UpdateFeed(c appengine.Context, feed *Feed) (*datastore.Key, error) {

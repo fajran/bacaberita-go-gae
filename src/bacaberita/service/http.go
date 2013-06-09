@@ -74,13 +74,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c := appengine.NewContext(r)
-	feed, err := data.GetFeed(c, url)
+	key, feed, err := data.GetFeed(c, url)
 	if err != nil {
 		http.Error(w, "Feed URL is is not registered", http.StatusNotFound)
 		return
 	}
 
-	key, err := data.UpdateFeed(c, feed)
+	key, err = data.UpdateFeed(c, feed)
 
 	fmt.Fprintf(w, "Update:\n")
 	fmt.Fprintf(w, "- Url: %s\n", url)
