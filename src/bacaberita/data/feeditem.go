@@ -16,7 +16,7 @@ type FeedItem struct {
 	Link        string
 	Guid        string
 	Date        time.Time
-	Description string
+	Description []byte
 
 	MediaUrl    string
 	MediaLength int
@@ -61,7 +61,7 @@ func (item *FeedItem) UpdateFromParser(data *parser.Item) {
 		item.Date = *data.Date
 	}
 	if data.Description != nil {
-		item.Description = *data.Description
+		item.Description = []byte(*data.Description)
 	}
 
 	if data.Media != nil {
