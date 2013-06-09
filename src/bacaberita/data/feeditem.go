@@ -25,7 +25,6 @@ type FeedItem struct {
 	Feed    *datastore.Key
 	Created time.Time
 	Updated time.Time
-	Content string
 }
 
 func StoreFeedItems(c appengine.Context, data *parser.Feed, feed *datastore.Key) error {
