@@ -46,8 +46,8 @@ func parseMedia(node *Node) (*Media, error) {
 	return nil, errors.New("Insufficient attributes")
 }
 
-func parseItem(node *Node) (Item, error) {
-	item := Item{}
+func parseItem(node *Node) (*Item, error) {
+	item := new(Item)
 	item.Date = nil
 
 	for _, child := range node.ChildElements() {
@@ -86,7 +86,7 @@ func parseItem(node *Node) (Item, error) {
 
 func parseChannel(channel *Node) (*Feed, error) {
 	feed := new(Feed)
-	feed.Items = make([]Item, 0, 0)
+	feed.Items = make([]*Item, 0, 0)
 	feed.Date = nil
 
 	for _, child := range channel.ChildElements() {

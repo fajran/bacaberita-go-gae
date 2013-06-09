@@ -27,5 +27,5 @@ type Feed struct {
 	ImageUrl    *string
 	ImageTitle  *string
 	ImageLink   *string
-	Items       []Item
+	Items       []*Item
 }
