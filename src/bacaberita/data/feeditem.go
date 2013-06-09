@@ -22,18 +22,21 @@ type FeedItem struct {
 	MediaLength int
 	MediaType   string
 
-	Feed    Feed
+	Feed    *datastore.Key
 	Created time.Time
 	Updated time.Time
 	Content string
 }
 
-func StoreFeedItems(c appengine.Context, data *parser.Feed, parent *datastore.Key) error {
+func StoreFeedItems(c appengine.Context, data *parser.Feed, feed *datastore.Key) error {
 	for _, item := range data.Items {
 		feedItem := new(FeedItem)
 		feedItem.UpdateFromParser(item)
+		feedItem.Created = time.Now()
+		feedItem.Updated = time.Now()
+		feedItem.Feed = feed
 
-		key := feedItem.NewKey(c, parent)
+		key := feedItem.NewKey(c, feed)
 
 		key, err := datastore.Put(c, key, feedItem)
 		if err != nil {
