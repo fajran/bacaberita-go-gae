@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"appengine"
+	"appengine/datastore"
 	"appengine/user"
 
 	"bacaberita/data"
@@ -32,6 +33,21 @@ func main(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, `<form method="post" action="/register">Register <input type="text" name="url"/><input type="submit"/></form>`)
 	fmt.Fprintf(w, `<form method="post" action="/update">Update <input type="text" name="url"/><input type="submit"/></form>`)
 	fmt.Fprintf(w, `<form method="post" action="/subscribe">Subscribe <input type="text" name="url"/><input type="submit"/></form>`)
+
+	// Show subscriptions
+	_, s, err := data.GetSubscription(c, u)
+	if err == datastore.ErrNoSuchEntity {
+		fmt.Fprintf(w, "No subscription")
+	} else if err != nil {
+		fmt.Fprintf(w, "Error retrieving subcription: %w", err)
+	} else {
+		fmt.Fprintf(w, "Subcriptions: %d", len(s.FeedList))
+		fmt.Fprintf(w, `<ul>`)
+		for _, item := range s.FeedList {
+			fmt.Fprintf(w, `<li>%s</li>`, item.FeedKey.StringID())
+		}
+		fmt.Fprintf(w, `</ul>`)
+	}
 }
 
 func register(w http.ResponseWriter, r *http.Request) {

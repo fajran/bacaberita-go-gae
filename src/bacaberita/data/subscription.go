@@ -63,3 +63,16 @@ func (s *Subscription) IsSubscribed(c appengine.Context, feed *datastore.Key) bo
 	}
 	return false
 }
+
+func GetSubscription(c appengine.Context, u *user.User) (*datastore.Key, *Subscription, error) {
+	s := new(Subscription)
+	s.UserID = u.ID
+
+	key := s.NewKey(c)
+	err := datastore.Get(c, key, s)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return key, s, nil
+}
